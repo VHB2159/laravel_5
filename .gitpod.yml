@@ -1,0 +1,29 @@
+# .gitpod.yml
+
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - init: |
+      # Laravel setup commands
+      composer create-project --prefer-dist laravel/laravel my-laravel-app
+      cd my-laravel-app
+      cp .env.example .env
+      php artisan key:generate
+      touch database/database.sqlite
+
+# Commands to run Laravel development server
+# and phpMyAdmin service
+- command: |
+    cd my-laravel-app
+    # Start phpMyAdmin
+    php -S 0.0.0.0:8080 -t /workspace/phpmyadmin &>/dev/null &
+    # Start Laravel server
+    php artisan serve --host=0.0.0.0 --port=8000
+
+# Expose ports for Laravel and phpMyAdmin
+ports:
+  - port: 8080
+    onOpen: open-preview
+  - port: 8000
+    onOpen: ignore  # Laravel server port
