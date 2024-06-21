@@ -5,21 +5,21 @@ image:
 
 tasks:
   - init: |
-      # Laravel setup commands
+      # Ensure Composer is installed and Laravel project is set up
       composer create-project --prefer-dist laravel/laravel my-laravel-app
       cd my-laravel-app
       cp .env.example .env
       php artisan key:generate
       touch database/database.sqlite
 
-# Commands to run Laravel development server
-# and phpMyAdmin service
-- command: |
-    cd my-laravel-app
-    # Start phpMyAdmin
-    php -S 0.0.0.0:8080 -t /workspace/phpmyadmin &>/dev/null &
-    # Start Laravel server
-    php artisan serve --host=0.0.0.0 --port=8000
+    # Commands to start Laravel development server and phpMyAdmin service
+  - command: |
+      cd my-laravel-app
+      composer install  # Ensure Composer dependencies are installed
+      # Start phpMyAdmin
+      php -S 0.0.0.0:8080 -t /workspace/phpmyadmin &>/dev/null &
+      # Start Laravel server
+      php artisan serve --host=0.0.0.0 --port=8000
 
 # Expose ports for Laravel and phpMyAdmin
 ports:
@@ -27,3 +27,4 @@ ports:
     onOpen: open-preview
   - port: 8000
     onOpen: ignore  # Laravel server port
+
